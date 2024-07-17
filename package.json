@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "nodemon": "^3.1.4",
     "socket.io": "^4.7.5",
     "vercel": "^35.0.2",
     "websockets": "^0.2.0"
