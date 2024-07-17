@@ -1,29 +1,29 @@
-let express = require('express');
-let http = require('http').createServer(app);
-let io = require('socket.io')(http);
-let port = process.env.PORT || 3000;
+const express = require('express')
+const app = express()
+const server = require('http').Server(app)
+const io = require('socket.io')(server)
+const { v4: uuidV4 } = require('uuid')
 
-let app = express();
-
-app.use(express.static(__dirname + '/public'));
+app.set('view engine', 'ejs')
+app.use(express.static('public'))
 
 app.get('/', (req, res) => {
-    res.render('/index.html');
-});
+  res.redirect(`/${uuidV4()}`)
+})
 
-io.on('connection', (socket) => {
-    console.log('A user connected');
+app.get('/:room', (req, res) => {
+  res.render('room', { roomId: req.params.room })
+})
 
-    socket.on('message', (message) => {
-        console.log(`Received message: ${message}`);
-        socket.broadcast.emit('message', message);
-    });
+io.on('connection', socket => {
+  socket.on('join-room', (roomId, userId) => {
+    socket.join(roomId)
+    socket.to(roomId).broadcast.emit('user-connected', userId)
 
     socket.on('disconnect', () => {
-        console.log('A user disconnected');
-    });
-});
+      socket.to(roomId).broadcast.emit('user-disconnected', userId)
+    })
+  })
+})
 
-http.listen(8080, () => {
-    console.log('Video call server is running');
-});
+server.listen(3000)

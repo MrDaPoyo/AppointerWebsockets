@@ -1,8 +1,14 @@
 {
   "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
     "nodemon": "^3.1.4",
     "socket.io": "^4.7.5",
+    "uuid": "^10.0.0",
     "vercel": "^35.0.2",
     "websockets": "^0.2.0"
+  },
+  "scripts": {
+    "start": "nodemon server.js"
   }
 }
